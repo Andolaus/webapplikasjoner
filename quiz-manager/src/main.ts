@@ -1,23 +1,45 @@
+type Category = "sport" | "music" | "movies";
+
 interface Quiz {
-    id: number;
-    question: string;
-    options: string[] | number[];
-    answer: string | number | (string | number)[];
+  id: string;
+  title: string;
+  questions: string[];
+  answers: Answer[];
+  category: Category;
+  createdAt?: Date;
 }
 
-const firstSampleQuiz: Quiz = {
-    id: 1,
-    question: "What is the capital of France?",
-    options: ["Paris", "London", "Berlin", "Madrid"],
-    answer: "Paris"
+interface Answer {
+  id: number;
+  answer: string;
+}
+
+const quizzes: Quiz[] = [];
+
+const addQuiz = (data: Quiz) => {
+  quizzes.push(data);
 };
 
-const secondSampleQuiz: Quiz = {
-    id: 2,
-    question: "What is the best food?",
-    options: ["Spaghetti", "Pizza", "Taco", "Sushi"],
-    answer: ["Pizza", "Sushi"]
+const getQuizById = (id: string): Quiz | undefined => {
+  return quizzes.find((quiz) => quiz.id === id);
 };
 
-console.log(firstSampleQuiz)
-console.log(secondSampleQuiz)
+const filterQuizByCategory = (category: Category): Quiz[] => {
+  return quizzes.filter((quiz) => quiz.category === category);
+};
+
+const getQuizAnswers = (quizId: string): Answer[] | undefined => {
+  const quiz = getQuizById(quizId);
+  return quiz ? quiz.answers : undefined;
+};
+
+const printQuizAnswersCount = () => {
+  return quizzes
+    .map((quiz) => {
+      const answers = getQuizAnswers(quiz.id);
+      return `Quiz ID: ${quiz.id}, Answers Count: ${
+        answers ? answers.length : 0
+      }`;
+    })
+    .join("\n");
+};
